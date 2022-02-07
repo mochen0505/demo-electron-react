@@ -1,10 +1,9 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
-    Modal, Form, Input, Button, Space, Select
+    Modal, Form, InputNumber, Button, Space, Select
 } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-const { Option } = Select;
 const parts = [
     { label: '胸', value: 'chest' },
     { label: '背', value: 'back' },
@@ -13,20 +12,37 @@ const parts = [
     { label: '腿', value: 'leg' },
 ];
 
-const category = {
-    chest: ['平板', '上斜'],
-    back: ['下拉', '划船'],
-    delt: ['飞鸟'],
-    arm: ['弯举', '屈伸'],
-    leg: ['深蹲', '器械'],
+const moves = {
+    chest: [
+        { label: '平板', value: 1 },
+        { label: '上斜', value: 2 },
+    ],
+    back: [
+        { label: '下拉', value: 1 },
+        { label: '划船', value: 2 },
+    ],
+    delt: [
+        { label: '飞鸟', value: 1 },
+    ],
+    arm: [
+        { label: '弯举', value: 1 },
+        { label: '屈伸', value: 2 },
+    ],
+    leg: [
+        { label: '深蹲', value: 1 },
+        { label: '器械', value: 2 },
+    ],
 };
 
 const AddRecordModal = ({ showModal, handleCloseModal, handleAddRecord }) => {
 
     const [form] = Form.useForm();
 
-    const handleChange = () => {
-        form.setFieldsValue({ sets: [] });
+    const [moveOption, setMoveOption] = useState([])
+
+    const handleChange = (value) => {
+        form.setFieldsValue({ move: null });
+        setMoveOption(moves[value])
     };
 
     const handleOk = () => {
@@ -49,54 +65,47 @@ const AddRecordModal = ({ showModal, handleCloseModal, handleAddRecord }) => {
         <Modal
             title='新增记录'
             visible={showModal}
+            width={600}
             onOk={handleOk}
             onCancel={handleCancel}
         >
             <Form form={form}>
-                <Form.Item name="part" label="训练部位" rules={[{ required: true, message: '必填' }]}>
+                <Form.Item name="part" label="部位" rules={[{ required: true, message: '必填' }]}>
                     <Select options={parts} onChange={handleChange} />
                 </Form.Item>
-                <Form.List name="sets">
+                <Form.Item name="move" label="动作" rules={[{ required: true, message: '必填' }]}>
+                    <Select options={moveOption} />
+                </Form.Item>
+                <Form.List name="capacity">
                     {(fields, { add, remove }) => (
                         <>
-                            {fields.map(field => (
-                                <Space key={field.key} align="baseline">
+                            {fields.map(({ key, name, ...restField }) => (
+                                <Space key={key} align="start">
                                     <Form.Item
-                                        noStyle
-                                        shouldUpdate={(prevValues, curValues) =>
-                                            prevValues.part !== curValues.part || prevValues.sets !== curValues.sets
-                                        }
-                                    >
-                                        {() => (
-                                            <Form.Item
-                                                {...field}
-                                                label="动作"
-                                                name={[field.name, 'move']}
-                                                rules={[{ required: true, message: '必填' }]}
-                                            >
-                                                <Select disabled={!form.getFieldValue('part')} style={{ width: 130 }}>
-                                                    {(category[form.getFieldValue('part')] || []).map(item => (
-                                                        <Option key={item} value={item}>
-                                                            {item}
-                                                        </Option>
-                                                    ))}
-                                                </Select>
-                                            </Form.Item>
-                                        )}
-                                    </Form.Item>
-                                    <Form.Item
-                                        {...field}
-                                        label="重量"
-                                        name={[field.name, 'weight']}
+                                        {...restField}
+                                        name={[name, 'weight']}
+                                        label='容量'
                                         rules={[{ required: true, message: '必填' }]}
                                     >
-                                        <Input />
+                                        <InputNumber addonAfter='kg' />
                                     </Form.Item>
-
-                                    <MinusCircleOutlined onClick={() => remove(field.name)} />
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, 'nums']}
+                                        rules={[{ required: true, message: '必填' }]}
+                                    >
+                                        <InputNumber addonAfter='个' />
+                                    </Form.Item>
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, 'sets']}
+                                        rules={[{ required: true, message: '必填' }]}
+                                    >
+                                        <InputNumber addonAfter='组' />
+                                    </Form.Item>
+                                    <MinusCircleOutlined onClick={() => remove(name)} />
                                 </Space>
                             ))}
-
                             <Form.Item>
                                 <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
                                     新增
@@ -106,6 +115,7 @@ const AddRecordModal = ({ showModal, handleCloseModal, handleAddRecord }) => {
                     )}
                 </Form.List>
             </Form>
+
         </Modal>
     )
 

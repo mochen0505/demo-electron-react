@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { NavLink } from 'react-router-dom';
-import { Menu } from 'antd';
+import { Menu, Switch } from 'antd';
 import {
     PieChartOutlined,
     DesktopOutlined,
@@ -11,10 +11,29 @@ const { Header, Sider, Content } = Layout;
 
 const AppLayout = ({ children }) => {
 
+    const [theme, setTheme] = useState(null)
+
+    useEffect(() => {
+        const removeEventListener = window.api.receive('fromMain', (data) => {
+            setTheme(data.theme)
+        })
+
+        return () => {
+            removeEventListener();
+        };
+    }, [])
+
+    const handleChangeTheme = (value) => {
+        const selectedTheme = value ? 'dark' : 'light'
+        setTheme(selectedTheme);
+        window.api.send('toMain', selectedTheme)
+    }
+
     const menu = (
         <Menu
             defaultSelectedKeys={['1']}
             mode="inline"
+            theme={theme}
         >
             <Menu.Item key="1" icon={<PieChartOutlined />}>
                 <NavLink to='/home'>
@@ -31,7 +50,12 @@ const AppLayout = ({ children }) => {
 
     return (
         <Layout className="app-layout">
-            <Header>Header</Header>
+            <Header>
+                <Switch
+                    checked={theme === 'dark'}
+                    onChange={handleChangeTheme}
+                />
+            </Header>
             <Layout className="app-layout-inner">
                 <Sider>
                     { menu }

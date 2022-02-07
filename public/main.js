@@ -1,12 +1,19 @@
+const fs = require('fs-extra')
 const path = require('path')
-const { app, BrowserWindow } = require('electron')
+const storage = require("electron-json-storage");
+const { app, BrowserWindow, ipcMain } = require('electron')
+
+let mainWindow
 
 function createWindow() {
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 1200,
         height: 880,
         webPreferences: {
-            nodeIntegration: true,
+            nodeIntegration: false, // is default value after Electron v5
+            contextIsolation: true, // protect against prototype pollution
+            enableRemoteModule: false, // turn off remote
+            preload: path.join(__dirname, 'preload.js') // use a preload script
         },
     })
     if (app.isPackaged) {
@@ -15,6 +22,35 @@ function createWindow() {
         mainWindow.loadURL('http://localhost:3000')
     }
 }
+
+const STORE_PATH = app.getPath('userData') // 获取electron应用的用户目录
+// 判断路径是否存在，若不存在，就创建
+if (!fs.pathExistsSync(STORE_PATH)) {
+    fs.mkdirpSync(STORE_PATH)
+}
+
+storage.setDataPath(path.join(STORE_PATH, '/data.json'));
+console.log(`Data stored at ${STORE_PATH}/data.json`)
+
+storage.get('theme', function(error, data) {
+    if (error) throw error;
+    mainWindow.webContents.on('did-finish-load', ()=>{
+        mainWindow.webContents.send('fromMain', data);
+    })
+});
+
+ipcMain.on('toMain', (event, args) => {
+    storage.set('theme', { theme: args }, function(error) {
+        if (error) throw error;
+
+        storage.get('theme', function(error, data) {
+            if (error) throw error;
+            mainWindow.webContents.on('did-finish-load', ()=>{
+                mainWindow.webContents.send('fromMain', data);
+            })
+        });
+    });
+});
 
 app.whenReady().then(createWindow)
 

@@ -4,7 +4,7 @@ import ColumnChart from './components/charts/column-chart'
 import AddRecordModal from './components/add-record-modal'
 import {
     PlusOutlined,
-} from '@ant-design/icons';
+} from '@ant-design/icons'
 import './index.less'
 
 const Home = () => {

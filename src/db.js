@@ -3,7 +3,7 @@ import Dexie from 'dexie';
 export const db = new Dexie('demo-electron-react-db');
 
 db.version(1).stores({
-    Records: '++id, date, part, move, capacity, num, set',
+    Records: '++id, site, account, password',
 });
 
 db.open().catch(function(error){

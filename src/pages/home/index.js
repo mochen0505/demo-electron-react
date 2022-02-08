@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Button, Menu, Dropdown } from 'antd'
-import ColumnChart from './components/charts/column-chart'
 import AddRecordModal from './components/add-record-modal'
 import { PlusOutlined } from '@ant-design/icons'
 import { useLiveQuery } from "dexie-react-hooks";
@@ -41,7 +40,7 @@ const Home = () => {
                     </Button>
                 </Dropdown>
             </div>
-            <ColumnChart />
+            Home
             <AddRecordModal
                 showModal={showAddRecordModal}
                 handleCloseModal={handleCloseAddRecordModal}

@@ -6,7 +6,6 @@
   "homepage": "./",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "@ant-design/plots": "^1.0.8",
     "@craco/craco": "^6.4.3",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",

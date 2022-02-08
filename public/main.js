@@ -35,18 +35,18 @@ console.log(`Data stored at ${STORE_PATH}/data.json`)
 storage.get('theme', function(error, data) {
     if (error) throw error;
     mainWindow.webContents.on('did-finish-load', ()=>{
-        mainWindow.webContents.send('fromMain', data);
+        mainWindow.webContents.send('GET_THEME', data);
     })
 });
 
-ipcMain.on('toMain', (event, args) => {
+ipcMain.on('SET_THEME', (event, args) => {
     storage.set('theme', { theme: args }, function(error) {
         if (error) throw error;
 
         storage.get('theme', function(error, data) {
             if (error) throw error;
             mainWindow.webContents.on('did-finish-load', ()=>{
-                mainWindow.webContents.send('fromMain', data);
+                mainWindow.webContents.send('GET_THEME', data);
             })
         });
     });

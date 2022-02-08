@@ -9,13 +9,13 @@ contextBridge.exposeInMainWorld(
     "api", {
         send: (channel, data) => {
             // whitelist channels
-            let validChannels = ['toMain'];
+            let validChannels = ['SET_THEME'];
             if (validChannels.includes(channel)) {
                 ipcRenderer.send(channel, data);
             }
         },
         receive: (channel, func) => {
-            let validChannels = ['fromMain'];
+            let validChannels = ['GET_THEME'];
             if (validChannels.includes(channel)) {
                 // Deliberately strip event as it includes `sender`
                 const subscription = (event, ...args) => func(...args)

@@ -14,7 +14,7 @@ const AppLayout = ({ children }) => {
     const [theme, setTheme] = useState(null)
 
     useEffect(() => {
-        const removeEventListener = window.api.receive('fromMain', (data) => {
+        const removeEventListener = window.api.receive('GET_THEME', (data) => {
             setTheme(data.theme)
         })
 
@@ -26,7 +26,7 @@ const AppLayout = ({ children }) => {
     const handleChangeTheme = (value) => {
         const selectedTheme = value ? 'dark' : 'light'
         setTheme(selectedTheme);
-        window.api.send('toMain', selectedTheme)
+        window.api.send('SET_THEME', selectedTheme)
     }
 
     const menu = (

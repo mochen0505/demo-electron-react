@@ -7,8 +7,6 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 const parts = [
     { label: '胸', value: 'chest' },
     { label: '背', value: 'back' },
-    { label: '肩', value: 'delt' },
-    { label: '手臂', value: 'arm' },
     { label: '腿', value: 'leg' },
 ];
 
@@ -21,16 +19,8 @@ const moves = {
         { label: '下拉', value: 1 },
         { label: '划船', value: 2 },
     ],
-    delt: [
-        { label: '飞鸟', value: 1 },
-    ],
-    arm: [
-        { label: '弯举', value: 1 },
-        { label: '屈伸', value: 2 },
-    ],
     leg: [
         { label: '深蹲', value: 1 },
-        { label: '器械', value: 2 },
     ],
 };
 

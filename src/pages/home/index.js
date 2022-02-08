@@ -2,13 +2,16 @@ import React, { useState } from 'react'
 import { Button, Menu, Dropdown } from 'antd'
 import ColumnChart from './components/charts/column-chart'
 import AddRecordModal from './components/add-record-modal'
-import {
-    PlusOutlined,
-} from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from '../../db'
 import './index.less'
 
 const Home = () => {
     const [showAddRecordModal, setShowAddRecordModal] = useState(false)
+    const records = useLiveQuery(() => db.Records.toArray())
+
+    console.log(records)
 
     const handleShowAddRecordModal = () => {
         setShowAddRecordModal(true)
@@ -36,7 +39,7 @@ const Home = () => {
                     <Button type="primary" shape="circle">
                         <PlusOutlined />
                     </Button>
-                </Dropdown>,
+                </Dropdown>
             </div>
             <ColumnChart />
             <AddRecordModal

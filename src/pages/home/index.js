@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Button, Menu, Dropdown } from 'antd'
 import AddRecordModal from './components/add-record-modal'
+import RecordTable from './components/record-table'
 import { PlusOutlined } from '@ant-design/icons'
-import { useLiveQuery } from "dexie-react-hooks";
+import { useLiveQuery } from "dexie-react-hooks"
 import { db } from '../../db'
 import './index.less'
 
@@ -22,7 +23,7 @@ const Home = () => {
 
     const handleAddRecord = (values) => {
         setShowAddRecordModal(false)
-        console.log(values)
+        db.Records.add(values)
     };
 
     const menu = (
@@ -40,7 +41,9 @@ const Home = () => {
                     </Button>
                 </Dropdown>
             </div>
-            Home
+            <RecordTable
+                data={records}
+            />
             <AddRecordModal
                 showModal={showAddRecordModal}
                 handleCloseModal={handleCloseAddRecordModal}
